@@ -1,200 +1,133 @@
-  document.addEventListener("DOMContentLoaded", () => {
-
-  const questions = [
-    {
-      question: "What does HTML stand for?",
-      answers: [
-        { text: "Hyper Text Markup Language", correct: true },
-        { text: "Hyperlinks Text Modern Language", correct: false },
-        { text: "Home Tool Markup Language", correct: false },
-        { text: "Hyper Trainer Marking Language", correct: false }
-      ]
-    },
-    {
-      question: "Which language is used to style web pages?",
-      answers: [
-        { text: "HTML", correct: false },
-        { text: "Python", correct: false },
-        { text: "CSS", correct: true },
-        { text: "Java", correct: false }
-      ]
-    },
-    {
-      question: "Which language adds interactivity to a website?",
-      answers: [
-        { text: "CSS", correct: false },
-        { text: "JavaScript", correct: true },
-        { text: "PHP", correct: false },
-        { text: "SQL", correct: false }
-      ]
-    },
-    {
-      question: "What does CSS stand for?",
-      answers: [
-        { text: "Cascading Style Sheets", correct: true },
-        { text: "Creative Style System", correct: false },
-        { text: "Computer Styling Structure", correct: false },
-        { text: "Colorful Style Sheet", correct: false }
-      ]
-    },
-    {
-      question: "What does console.log() do in JavaScript?",
-      answers: [
-        { text: "Prints output to the browser console", correct: true },
-        { text: "Shows a popup alert", correct: false },
-        { text: "Writes HTML", correct: false },
-        { text: "Refreshes the page", correct: false }
-      ]
-    },
-    {
-      question: "Which symbol is used for comments in CSS?",
-      answers: [
-        { text: "/* comment */", correct: true },
-        { text: "// comment", correct: false },
-        { text: "<!-- comment -->", correct: false },
-        { text: "# comment", correct: false }
-      ]
-    },
-    {
-      question: "In CSS, which property controls text size?",
-      answers: [
-        { text: "font-size", correct: true },
-        { text: "text-size", correct: false },
-        { text: "size", correct: false },
-        { text: "font-style", correct: false }
-      ]
-    },
-    {
-      question: "What does DOM stand for?",
-      answers: [
-        { text: "Document Object Model", correct: true },
-        { text: "Data Object Mode", correct: false },
-        { text: "Document Order Machine", correct: false },
-        { text: "Desktop Object Module", correct: false }
-      ]
-    },
-    {
-      question: "Which method selects an element by its ID?",
-      answers: [
-        { text: "document.getElementById()", correct: true },
-        { text: "document.id()", correct: false },
-        { text: "document.select()", correct: false },
-        { text: "$('#id')", correct: false }
-      ]
-    },
-    {
-      question: "Which CSS property adds space INSIDE an element?",
-      answers: [
-        { text: "padding", correct: true },
-        { text: "margin", correct: false },
-        { text: "border", correct: false },
-        { text: "gap", correct: false }
-      ]
-    }
-  ];
-
-  let currentQuestionIndex = 0;
-  let score = 0;
-  let timeLeft = 15;
-  let timer;
-
-  const progress = document.getElementById("progress");
-  const timeDisplay = document.getElementById("time");
-  const questionElement = document.getElementById("question");
-  const answersContainer = document.getElementById("answers");
-  const nextBtn = document.getElementById("next-btn");
-  const scoreContainer = document.getElementById("score-container");
-  const scoreDisplay = document.getElementById("score");
-  const restartBtn = document.getElementById("restart-btn");
-
-  function startQuiz() {
-    currentQuestionIndex = 0;
-    score = 0;
-    scoreContainer.classList.add("hidden");
-    document.getElementById("quiz-container").classList.remove("hidden");
-    nextBtn.classList.add("hidden");
-    showQuestion();
+ // ===== QUIZ DATA ===== //
+const questions = [
+  {
+    question: "What time does work officially start?",
+    options: ["8:00 AM", "9:00 AM", "10:00 AM", "7:30 AM"],
+    answer: 1
+  },
+  {
+    question: "How long is the lunch break?",
+    options: ["30 minutes", "45 minutes", "1 hour", "2 hours"],
+    answer: 2
+  },
+  {
+    question: "What skill is most important for succeeding in your role?",
+    options: ["Good communication", "Speed typing", "Excel mastery", "Coding"],
+    answer: 0
+  },
+  {
+    question: "How do employees clock in or sign attendance?",
+    options: ["Paper register", "Login portal", "Biometric keycard", "Calling HR"],
+    answer: 2
+  },
+  {
+    question: "What is the dress code at your workplace?",
+    options: ["Corporate", "Traditional", "Smart casual", "Anything goes"],
+    answer: 2
+  },
+  {
+    question: "What is the company's preferred communication tool?",
+    options: ["WhatsApp", "Slack", "Phone calls", "Email"],
+    answer: 3
+  },
+  {
+    question: "What should you do if you need help with a task or project?",
+    options: ["Ignore it", "Ask a supervisor or senior colleague", "Message HR", "Google it only"],
+    answer: 1
+  },
+  {
+    question: "Which department helps you set up your work tools on your first day?",
+    options: ["Admin", "Finance", "IT Department", "Security"],
+    answer: 2
+  },
+  {
+    question: "Where do you submit requests for office supplies or equipment?",
+    options: ["Security", "Your friend", "Admin Department", "Finance"],
+    answer: 2
+  },
+  {
+    question: "Who do you contact if you have issues with your salary or payroll?",
+    options: ["IT", "Admin", "HR Department", "Security"],
+    answer: 2
   }
+];
 
-  function startTimer() {
-    timeLeft = 15;
-    timeDisplay.textContent = timeLeft;
+// ===== DOM ELEMENTS ===== //
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const timerEl = document.getElementById("timer");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
 
-    clearInterval(timer);
-    timer = setInterval(() => {
-      timeLeft--;
-      timeDisplay.textContent = timeLeft;
+// ===== QUIZ LOGIC ===== //
+let currentIndex = 0;
+let score = 0;
+let timeLeft = 15;
+let timer;
 
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        autoFail();
-      }
-    }, 1000);
-  }
+function startQuiz() {
+  showQuestion();
+  startTimer();
+}
 
-  function autoFail() {
-    const allButtons = answersContainer.querySelectorAll("button");
-    allButtons.forEach(btn => btn.disabled = true);
-    nextBtn.classList.remove("hidden");
-  }
+function showQuestion() {
+  const current = questions[currentIndex];
 
-  function updateProgress() {
-    const progressPercent = (currentQuestionIndex / questions.length) * 100;
-    progress.style.width = progressPercent + "%";
-  }
+  questionEl.textContent = current.question;
+  optionsEl.innerHTML = "";
 
-  function showQuestion() {
-    answersContainer.innerHTML = "";
-    nextBtn.classList.add("hidden");
-
-    updateProgress();
-    startTimer();
-
-    const currentQuestion = questions[currentQuestionIndex];
-    questionElement.textContent = currentQuestion.question;
-
-    currentQuestion.answers.forEach(answer => {
-      const button = document.createElement("button");
-      button.textContent = answer.text;
-      button.addEventListener("click", () =>
-        selectAnswer(button, answer.correct)
-      );
-      answersContainer.appendChild(button);
-    });
-  }
-
-  function selectAnswer(button, correct) {
-    const allButtons = answersContainer.querySelectorAll("button");
-    allButtons.forEach(btn => btn.disabled = true);
-
-    clearInterval(timer);
-
-    if (correct) {
-      button.classList.add("correct");
-      score++;
-    } else {
-      button.classList.add("wrong");
-    }
-
-    nextBtn.classList.remove("hidden");
-  }
-
-  nextBtn.addEventListener("click", () => {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) showQuestion();
-    else endQuiz();
+  current.options.forEach((option, index) => {
+    const btn = document.createElement("button");
+    btn.textContent = option;
+    btn.className = "option-btn";
+    btn.onclick = () => selectAnswer(index);
+    optionsEl.appendChild(btn);
   });
+}
 
-  function endQuiz() {
-    document.getElementById("quiz-container").classList.add("hidden");
-    scoreContainer.classList.remove("hidden");
-    scoreDisplay.textContent = `${score} / ${questions.length}`;
-    progress.style.width = "100%";
-    clearInterval(timer);
+function startTimer() {
+  clearInterval(timer);
+  timeLeft = 15;
+  timerEl.textContent = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+function selectAnswer(index) {
+  const correct = questions[currentIndex].answer;
+
+  if (index === correct) score++;
+
+  nextQuestion();
+}
+
+function nextQuestion() {
+  currentIndex++;
+
+  if (currentIndex < questions.length) {
+    showQuestion();
+    startTimer();
+  } else {
+    endQuiz();
   }
+}
 
-  restartBtn.addEventListener("click", startQuiz);
+function endQuiz() {
+  document.getElementById("quiz-container").style.display = "none";
+  resultEl.style.display = "block";
 
-  startQuiz();
+  resultEl.innerHTML = `
+    <h2>Quiz Completed!</h2>
+    <p>Your Score: ${score} / ${questions.length}</p>
+  `;
+}
 
-});
+startQuiz();
